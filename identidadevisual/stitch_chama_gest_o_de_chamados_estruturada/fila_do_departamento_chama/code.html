@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Fila do Departamento - Chama</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "tertiary": "#705d00",
+                      "surface-tint": "#b12d00",
+                      "surface-container-high": "#e2e7ff",
+                      "error": "#ba1a1a",
+                      "inverse-surface": "#283044",
+                      "on-primary": "#ffffff",
+                      "on-error-container": "#93000a",
+                      "surface-dim": "#d2d9f4",
+                      "surface-variant": "#dae2fd",
+                      "secondary-container": "#fd8b00",
+                      "on-primary-fixed-variant": "#872000",
+                      "inverse-on-surface": "#eef0ff",
+                      "on-secondary-fixed-variant": "#6e3900",
+                      "surface-container-low": "#f2f3ff",
+                      "on-background": "#131b2e",
+                      "outline": "#926f66",
+                      "primary": "#ad2c00",
+                      "on-tertiary-container": "#4c3f00",
+                      "inverse-primary": "#ffb5a0",
+                      "tertiary-fixed-dim": "#e9c400",
+                      "outline-variant": "#e7bdb2",
+                      "on-error": "#ffffff",
+                      "primary-container": "#d83900",
+                      "on-surface": "#131b2e",
+                      "on-surface-variant": "#5d4038",
+                      "primary-fixed-dim": "#ffb5a0",
+                      "surface-bright": "#faf8ff",
+                      "surface-container": "#eaedff",
+                      "background": "#faf8ff",
+                      "on-primary-fixed": "#3b0900",
+                      "tertiary-fixed": "#ffe16d",
+                      "error-container": "#ffdad6",
+                      "on-secondary-container": "#603100",
+                      "on-secondary-fixed": "#2f1500",
+                      "secondary": "#904d00",
+                      "on-tertiary-fixed": "#221b00",
+                      "secondary-fixed": "#ffdcc3",
+                      "surface-container-highest": "#dae2fd",
+                      "on-secondary": "#ffffff",
+                      "tertiary-container": "#c9a900",
+                      "on-primary-container": "#fffbff",
+                      "surface-container-lowest": "#ffffff",
+                      "surface": "#faf8ff",
+                      "primary-fixed": "#ffdbd1",
+                      "secondary-fixed-dim": "#ffb77d",
+                      "on-tertiary": "#ffffff",
+                      "on-tertiary-fixed-variant": "#544600"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "gutter": "24px",
+                      "stack-lg": "24px",
+                      "stack-md": "16px",
+                      "margin-desktop": "32px",
+                      "margin-mobile": "16px",
+                      "container-max": "1440px",
+                      "sidebar-width": "280px",
+                      "stack-sm": "8px"
+              },
+              "fontFamily": {
+                      "display-lg": [
+                              "Inter"
+                      ],
+                      "headline-md": [
+                              "Inter"
+                      ],
+                      "headline-lg": [
+                              "Inter"
+                      ],
+                      "body-lg": [
+                              "Inter"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ],
+                      "headline-sm": [
+                              "Inter"
+                      ],
+                      "headline-lg-mobile": [
+                              "Inter"
+                      ],
+                      "label-caps": [
+                              "Inter"
+                      ],
+                      "metadata": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "display-lg": [
+                              "48px",
+                              {
+                                      "lineHeight": "56px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-sm": [
+                              "20px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-lg-mobile": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "label-caps": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "metadata": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "500"
+                              }
+                      ]
+              }
+            },
+          }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .icon-fill {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+</head>
+<body class="bg-[#F8FAFC] text-on-surface font-body-md text-body-md min-h-screen flex antialiased">
+<!-- SideNavBar -->
+<nav class="hidden md:flex bg-[#0F172A] fixed left-0 top-0 h-full w-[280px] shadow-sm border-r border-outline-variant flex-col py-gutter z-20">
+<div class="px-gutter mb-8">
+<h1 class="font-headline-lg text-headline-lg text-on-primary">Chama</h1>
+<p class="font-metadata text-metadata text-surface-variant/70">Task Management</p>
+</div>
+<ul class="flex-1 flex flex-col gap-2 px-4">
+<li>
+<a class="flex items-center gap-3 px-4 py-3 text-surface-variant/70 hover:text-on-primary hover:bg-white/5 transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 bg-white/10 border-l-4 border-primary text-on-primary font-bold rounded-r-lg" href="#">
+<span class="material-symbols-outlined" data-icon="list_alt">list_alt</span>
+<span>Backlog</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 text-surface-variant/70 hover:text-on-primary hover:bg-white/5 transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="today">today</span>
+<span>My Day</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 text-surface-variant/70 hover:text-on-primary hover:bg-white/5 transition-colors rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span>Settings</span>
+</a>
+</li>
+</ul>
+<div class="px-4 mt-auto">
+<button class="w-full bg-[#FF4500] hover:bg-[#FF8C00] text-white font-body-md text-body-md py-3 rounded-lg transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">add</span>
+                New Task
+            </button>
+</div>
+</nav>
+<!-- Main Content Area -->
+<div class="flex-1 ml-0 md:ml-[280px] flex flex-col min-h-screen">
+<!-- TopNavBar -->
+<header class="bg-surface fixed top-0 right-0 w-full md:w-[calc(100%-280px)] h-16 border-b border-outline-variant flex justify-between items-center px-margin-desktop z-10">
+<div class="flex items-center gap-4">
+<div class="relative hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="pl-10 pr-4 py-2 border border-outline-variant rounded-lg bg-white focus:outline-none focus:border-[#FF4500] focus:ring-2 focus:ring-[#FF4500]/20 w-64 transition-all" placeholder="Search tasks..." type="text"/>
+</div>
+<h2 class="md:hidden font-headline-md text-headline-md text-primary">Chama</h2>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-low rounded-full transition-all active:opacity-80">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<img alt="User Profile" class="w-8 h-8 rounded-full border border-outline-variant" data-alt="A professional headshot of a confident corporate user in a modern office environment. High key lighting, clean corporate aesthetic, subtle deep slate blue background elements complementing the Chama brand palette." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDdm0btvRDR96k4WajTz8H5sLAI7rQdL5xxxgyLc1BN-64AQHJgPAh-IRbNKEJFs2Mwp2aXn8mbOpASMifoc-vfTEt8aCqozcTNMIumtP-Td88EGzNOpgRUdhOEGoEowrucBihnaZjfUjAvKANETMg8UCxsnZsQLG5UCA6xI_nkrNsejqnpW94JLpQIR2hDLF24ibSKGPmYUKSY2WEVDveu1iGwYWyZER4GnIyI8WcRipSDqa_rh5lERFq3Xz94OBEbNO8Vnoz7wUJo"/>
+</div>
+</header>
+<!-- Page Content -->
+<main class="flex-1 mt-16 p-margin-mobile md:p-margin-desktop max-w-container-max mx-auto w-full">
+<div class="mb-8">
+<h1 class="font-headline-lg text-headline-lg text-on-background mb-6">Fila do Departamento</h1>
+<!-- Filter Tabs -->
+<div class="flex gap-6 border-b border-outline-variant">
+<button class="pb-3 text-primary font-bold border-b-2 border-primary font-body-md text-body-md px-2">Abertos</button>
+<button class="pb-3 text-on-surface-variant hover:text-primary transition-colors font-body-md text-body-md px-2">Em Andamento</button>
+<button class="pb-3 text-on-surface-variant hover:text-primary transition-colors font-body-md text-body-md px-2">Cancelados</button>
+</div>
+</div>
+<!-- Task List Area -->
+<div class="flex flex-col gap-4">
+<!-- Task Card 1 -->
+<div class="bg-white rounded-lg p-stack-lg flex items-center justify-between group relative overflow-hidden" style="box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.1), 0 2px 4px -2px rgba(15, 23, 42, 0.05);">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-[#FF4500]"></div> <!-- Priority Indicator High -->
+<div class="flex items-center gap-6">
+<img alt="Avatar" class="w-10 h-10 rounded-full border border-outline-variant" data-alt="Small circular avatar of a professional woman in a clean corporate setting. Warm, dynamic lighting reflecting the brand's 'controlled heat' energy." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCoxp2PoohEM1BElks4eu1I1jISNEFBU6IuEgXCkcFy8BlwtUevyZeuzq1cIWJNyHMd6VtbCl8CTQ7PODYl4lFSgu0HRVX4BRktnN_fS8LLJ12rGnJ0XaiQqvSfX1n0Yd_I8zeE1iV-tT7fJpIJXujxxQs8BWskvmUfHyX9SO-T8lcNefgBO_4v75SFt1sAGB0HU7gRGCPX-3SYbccrMMRECags21hvscbsi1mMRLQ9af4YPP1MReRDN_9ihDFpOWj-hkd29NWxiKxT"/>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-background mb-1">Update Q3 Financial Reports</h3>
+<p class="font-metadata text-metadata text-surface-variant/70">Created by Sarah Jenkins</p>
+</div>
+</div>
+<div class="flex items-center gap-8">
+<div class="text-right">
+<span class="block font-label-caps text-label-caps text-on-surface-variant uppercase mb-1">Deadline</span>
+<span class="font-metadata text-metadata text-error font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">warning</span>
+                                Today, 5:00 PM
+                            </span>
+</div>
+<span class="px-3 py-1 rounded-full bg-primary-container/10 text-primary-container font-metadata text-metadata font-semibold">
+                            High Priority
+                        </span>
+</div>
+</div>
+<!-- Task Card 2 -->
+<div class="bg-white rounded-lg p-stack-lg flex items-center justify-between group relative overflow-hidden" style="box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.1), 0 2px 4px -2px rgba(15, 23, 42, 0.05);">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-[#FFD700]"></div> <!-- Priority Indicator Medium -->
+<div class="flex items-center gap-6">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center text-primary font-bold border border-outline-variant">
+                            MR
+                        </div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-background mb-1">Review Vendor Contracts</h3>
+<p class="font-metadata text-metadata text-surface-variant/70">Created by Mark Rivera</p>
+</div>
+</div>
+<div class="flex items-center gap-8">
+<div class="text-right">
+<span class="block font-label-caps text-label-caps text-on-surface-variant uppercase mb-1">Deadline</span>
+<span class="font-metadata text-metadata text-on-surface">
+                                Tomorrow, 12:00 PM
+                            </span>
+</div>
+<span class="px-3 py-1 rounded-full bg-tertiary-container/10 text-tertiary-container font-metadata text-metadata font-semibold">
+                            In Review
+                        </span>
+</div>
+</div>
+<!-- Task Card 3 -->
+<div class="bg-white rounded-lg p-stack-lg flex items-center justify-between group relative overflow-hidden" style="box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.1), 0 2px 4px -2px rgba(15, 23, 42, 0.05);">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-surface-variant"></div> <!-- Priority Indicator Low -->
+<div class="flex items-center gap-6">
+<img alt="Avatar" class="w-10 h-10 rounded-full border border-outline-variant" data-alt="Small circular avatar of a professional man in a clean corporate setting. Soft, clear lighting reflecting the brand's 'controlled heat' energy." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3ayeFbTTL-OG1kXfjg2KltNufXSf06eIdYhcCsAofmRfmPESMvlrjJLzhuKk1Z-LTa6okd3q76IAwfgHLcSmnypn19L4Dl4X9mv2C-SKGAztjPp7kS7-I-l-ceKrmnoOAVHJ_g6n36Dx5oJLrH71qm6DMl2hOx4kOXnQXfS-tVA4rnincwS83RqSqlekFUj-xLH8GYEekbo90kArGZyVoyhazrNeEqrDKNSE0Im15nz5tjaDFkxoK50mxlZwmNEEnz_W7i1-KiFd1"/>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-background mb-1">Onboard New Design Hires</h3>
+<p class="font-metadata text-metadata text-surface-variant/70">Created by Alex Chen</p>
+</div>
+</div>
+<div class="flex items-center gap-8">
+<div class="text-right">
+<span class="block font-label-caps text-label-caps text-on-surface-variant uppercase mb-1">Deadline</span>
+<span class="font-metadata text-metadata text-on-surface">
+                                Oct 24, 2023
+                            </span>
+</div>
+<span class="px-3 py-1 rounded-full bg-surface-variant/30 text-on-surface-variant font-metadata text-metadata font-semibold">
+                            Pending
+                        </span>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

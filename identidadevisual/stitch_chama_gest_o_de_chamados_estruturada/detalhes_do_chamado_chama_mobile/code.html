@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Chama - Task Details</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed": "#ffdcc3",
+                        "on-background": "#131b2e",
+                        "outline": "#926f66",
+                        "primary-fixed-dim": "#ffb5a0",
+                        "primary": "#ad2c00",
+                        "primary-fixed": "#ffdbd1",
+                        "error-container": "#ffdad6",
+                        "inverse-primary": "#ffb5a0",
+                        "tertiary-fixed": "#ffe16d",
+                        "surface-variant": "#dae2fd",
+                        "on-error-container": "#93000a",
+                        "surface-container-high": "#e2e7ff",
+                        "on-surface-variant": "#5d4038",
+                        "error": "#ba1a1a",
+                        "on-secondary-fixed-variant": "#6e3900",
+                        "on-secondary-fixed": "#2f1500",
+                        "on-primary-fixed-variant": "#872000",
+                        "outline-variant": "#e7bdb2",
+                        "on-primary": "#ffffff",
+                        "surface-dim": "#d2d9f4",
+                        "surface": "#faf8ff",
+                        "inverse-surface": "#283044",
+                        "surface-tint": "#b12d00",
+                        "surface-container": "#eaedff",
+                        "background": "#faf8ff",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary-fixed-variant": "#544600",
+                        "surface-container-low": "#f2f3ff",
+                        "primary-container": "#d83900",
+                        "tertiary-container": "#c9a900",
+                        "inverse-on-surface": "#eef0ff",
+                        "secondary-fixed-dim": "#ffb77d",
+                        "on-tertiary-fixed": "#221b00",
+                        "on-tertiary-container": "#4c3f00",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-container": "#fffbff",
+                        "tertiary": "#705d00",
+                        "secondary-container": "#fd8b00",
+                        "surface-container-highest": "#dae2fd",
+                        "on-error": "#ffffff",
+                        "on-secondary-container": "#603100",
+                        "tertiary-fixed-dim": "#e9c400",
+                        "surface-container-lowest": "#ffffff",
+                        "on-surface": "#131b2e",
+                        "surface-bright": "#faf8ff",
+                        "secondary": "#904d00",
+                        "on-primary-fixed": "#3b0900"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container-max": "1440px",
+                        "stack-lg": "24px",
+                        "margin-mobile": "16px",
+                        "margin-desktop": "32px",
+                        "stack-sm": "8px",
+                        "stack-md": "16px",
+                        "gutter": "24px",
+                        "sidebar-width": "280px"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "metadata": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "metadata": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.filled {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col font-body-md antialiased md:hidden pb-24">
+<!-- Header (Task Details specific, not global nav) -->
+<header class="bg-surface sticky top-0 z-10 border-b border-outline-variant px-margin-mobile py-4 flex items-center gap-4">
+<button class="text-on-surface hover:text-primary transition-colors flex items-center justify-center p-2 -ml-2 rounded-full hover:bg-surface-container-low">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<div class="flex-1">
+<h1 class="font-headline-sm text-headline-sm text-on-surface truncate">CHM-2045</h1>
+</div>
+<button class="text-on-surface hover:text-primary transition-colors flex items-center justify-center p-2 -mr-2 rounded-full hover:bg-surface-container-low">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 flex flex-col px-margin-mobile py-stack-lg gap-stack-lg">
+<!-- Top Section: Title & Status -->
+<section class="flex flex-col gap-stack-sm bg-white rounded-xl shadow-sm p-stack-lg border border-outline-variant/30">
+<div class="flex justify-between items-start gap-4">
+<h2 class="font-headline-md text-headline-md text-on-surface">Atualização do Servidor de Banco de Dados Produção</h2>
+<span class="inline-flex items-center px-3 py-1 rounded-full bg-secondary-container/20 text-secondary font-label-caps text-label-caps whitespace-nowrap">Em Progresso</span>
+</div>
+<div class="flex items-center gap-2 mt-2">
+<div class="w-1 h-4 bg-error rounded-full"></div>
+<span class="font-metadata text-metadata text-error">Prioridade Alta</span>
+</div>
+</section>
+<!-- Middle Section: Description & Metadata -->
+<section class="flex flex-col gap-stack-md bg-white rounded-xl shadow-sm p-stack-lg border border-outline-variant/30">
+<div>
+<h3 class="font-label-caps text-label-caps text-on-surface-variant mb-2">Descrição</h3>
+<p class="font-body-md text-body-md text-on-surface text-opacity-90 leading-relaxed">
+                    Necessário realizar a atualização de segurança crítica no servidor principal do banco de dados (DB-PROD-01). A janela de manutenção deve ocorrer durante a madrugada para minimizar impacto. Requer backup completo antes da execução.
+                </p>
+</div>
+<hr class="border-outline-variant/50"/>
+<div class="grid grid-cols-2 gap-y-4 gap-x-2">
+<div>
+<h3 class="font-label-caps text-label-caps text-on-surface-variant mb-1">Solicitante</h3>
+<div class="flex items-center gap-2">
+<img alt="Avatar" class="w-8 h-8 rounded-full border border-outline-variant" data-alt="A small, professional headshot of a corporate employee on a clean, light background. The style is modern, sharp, and consistent with a high-end corporate directory. Lighting is even and flattering. The color palette is neutral to fit within a light-mode UI." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBIOxb3GMS4atb0BOPQJtUSQdzc-IedvjHthiflHpPX6AMWWCgi5QuvNO39swMsthoAEfEv5LH9fCoLlY9fvZz7jnvZd4-8iI87atSk12XZ92PpgU4DdR4veeBZfluPLIaUaYnSy9sY7YFf9JY3lxn1DYFQnmVW-C4KHBi725B7IwmqtNKc4TyFlDN9C9sG8cplVxoWi0eg805cVG3oMN3e_5C8AiMadC0beEGBmlOG5CV_PsAJ18KVn5RC6ZFBmY4i6RrICihumEdK"/>
+<span class="font-metadata text-metadata text-on-surface">Carlos Silva</span>
+</div>
+</div>
+<div>
+<h3 class="font-label-caps text-label-caps text-on-surface-variant mb-1">Responsável</h3>
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold text-sm">JS</div>
+<span class="font-metadata text-metadata text-on-surface">João Souza</span>
+</div>
+</div>
+<div>
+<h3 class="font-label-caps text-label-caps text-on-surface-variant mb-1">Criado Em</h3>
+<span class="font-metadata text-metadata text-on-surface">15 Out, 09:30</span>
+</div>
+<div>
+<h3 class="font-label-caps text-label-caps text-on-surface-variant mb-1">Vencimento</h3>
+<span class="font-metadata text-metadata text-error font-medium">16 Out, 02:00</span>
+</div>
+</div>
+</section>
+<!-- Bottom Section: Timeline/Audit Trail -->
+<section class="flex flex-col gap-stack-md">
+<h3 class="font-headline-sm text-headline-sm text-on-surface px-1">Histórico</h3>
+<div class="relative pl-6 flex flex-col gap-6 before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-[2px] before:bg-surface-container-high">
+<!-- Timeline Item 1 -->
+<div class="relative">
+<div class="absolute -left-6 w-6 h-6 rounded-full bg-surface border-2 border-primary flex items-center justify-center z-10">
+<span class="material-symbols-outlined text-[12px] text-primary filled">history_edu</span>
+</div>
+<div class="bg-white rounded-lg p-4 shadow-sm border border-outline-variant/30">
+<div class="flex justify-between items-start mb-1">
+<span class="font-metadata text-metadata text-on-surface font-semibold">Nota Adicionada</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">10:45</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm">Backup completo verificado e armazenado na zona segura. Preparativos concluídos.</p>
+<span class="block mt-2 font-label-caps text-label-caps text-primary">por João Souza</span>
+</div>
+</div>
+<!-- Timeline Item 2 -->
+<div class="relative">
+<div class="absolute -left-6 w-6 h-6 rounded-full bg-surface border-2 border-secondary flex items-center justify-center z-10">
+<span class="material-symbols-outlined text-[12px] text-secondary filled">update</span>
+</div>
+<div class="bg-white rounded-lg p-4 shadow-sm border border-outline-variant/30">
+<div class="flex justify-between items-start mb-1">
+<span class="font-metadata text-metadata text-on-surface font-semibold">Status Alterado</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">09:40</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm">De <b>Aberto</b> para <b>Em Progresso</b></p>
+<span class="block mt-2 font-label-caps text-label-caps text-secondary">por João Souza</span>
+</div>
+</div>
+<!-- Timeline Item 3 -->
+<div class="relative">
+<div class="absolute -left-6 w-6 h-6 rounded-full bg-surface border-2 border-outline-variant flex items-center justify-center z-10">
+<span class="material-symbols-outlined text-[12px] text-on-surface-variant filled">add_circle</span>
+</div>
+<div class="bg-surface-container-low rounded-lg p-4">
+<div class="flex justify-between items-start mb-1">
+<span class="font-metadata text-metadata text-on-surface font-semibold">Chamado Criado</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">09:30</span>
+</div>
+<span class="block mt-2 font-label-caps text-label-caps text-on-surface-variant">por Carlos Silva</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Fixed Action Bar -->
+<div class="fixed bottom-0 left-0 right-0 bg-white border-t border-outline-variant shadow-[0_-4px_6px_-1px_rgba(15,23,42,0.05)] p-margin-mobile flex gap-4 z-20">
+<button class="flex-1 bg-white border-2 border-outline-variant text-on-surface font-metadata text-metadata py-3 rounded-lg flex items-center justify-center gap-2 hover:bg-surface-container-low transition-colors active:scale-[0.98]">
+<span class="material-symbols-outlined">add_comment</span>
+            Nota
+        </button>
+<button class="flex-[2] bg-primary text-on-primary font-metadata text-metadata font-bold py-3 rounded-lg flex items-center justify-center gap-2 shadow-sm hover:bg-[#FF8C00] transition-colors active:scale-[0.98]">
+<span class="material-symbols-outlined filled">done_all</span>
+            Concluir Tarefa
+        </button>
+</div>
+</body></html>

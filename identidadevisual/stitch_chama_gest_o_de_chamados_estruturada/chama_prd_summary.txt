@@ -1,0 +1,21 @@
+# Chama - Task Management System PRD
+
+## 1. Overview
+A multi-platform system for task delegation and centralized communication based on a Finite State Machine (FSM).
+
+## 2. Roles
+- **Creator**: Opens demands.
+- **Executor**: Works on demands (Backlog -> In Progress -> In Review).
+- **Supervisor**: Triages, audits quality, and approves final deliveries.
+
+## 3. Finite State Machine (FSM)
+Open -> In Progress -> In Review -> Completed/Canceled.
+
+## 4. Key Screens (Web/Desktop)
+1. **Login/Register**: Auth flow.
+2. **Organization Selection**: Tenant picker.
+3. **Dashboard (Painel Geral)**: KPI cards and recent feed.
+4. **Department Backlog (Fila)**: Filterable list of all department tasks.
+5. **My Day (Meu Dia)**: Kanban-style view for the Executor.
+6. **Task Details (Detalhes do Chamado)**: FSM controls and audit/chat timeline.
+7. **Settings/Organization (Configurações)**: User and department management.

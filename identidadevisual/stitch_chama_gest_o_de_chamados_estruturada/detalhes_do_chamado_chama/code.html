@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+
+<html class="light" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Detalhes do Chamado - Chama</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "tertiary": "#705d00",
+                      "surface-tint": "#b12d00",
+                      "surface-container-high": "#e2e7ff",
+                      "error": "#ba1a1a",
+                      "inverse-surface": "#283044",
+                      "on-primary": "#ffffff",
+                      "on-error-container": "#93000a",
+                      "surface-dim": "#d2d9f4",
+                      "surface-variant": "#dae2fd",
+                      "secondary-container": "#fd8b00",
+                      "on-primary-fixed-variant": "#872000",
+                      "inverse-on-surface": "#eef0ff",
+                      "on-secondary-fixed-variant": "#6e3900",
+                      "surface-container-low": "#f2f3ff",
+                      "on-background": "#131b2e",
+                      "outline": "#926f66",
+                      "primary": "#ad2c00",
+                      "on-tertiary-container": "#4c3f00",
+                      "inverse-primary": "#ffb5a0",
+                      "tertiary-fixed-dim": "#e9c400",
+                      "outline-variant": "#e7bdb2",
+                      "on-error": "#ffffff",
+                      "primary-container": "#d83900",
+                      "on-surface": "#131b2e",
+                      "on-surface-variant": "#5d4038",
+                      "primary-fixed-dim": "#ffb5a0",
+                      "surface-bright": "#faf8ff",
+                      "surface-container": "#eaedff",
+                      "background": "#faf8ff",
+                      "on-primary-fixed": "#3b0900",
+                      "tertiary-fixed": "#ffe16d",
+                      "error-container": "#ffdad6",
+                      "on-secondary-container": "#603100",
+                      "on-secondary-fixed": "#2f1500",
+                      "secondary": "#904d00",
+                      "on-tertiary-fixed": "#221b00",
+                      "secondary-fixed": "#ffdcc3",
+                      "surface-container-highest": "#dae2fd",
+                      "on-secondary": "#ffffff",
+                      "tertiary-container": "#c9a900",
+                      "on-primary-container": "#fffbff",
+                      "surface-container-lowest": "#ffffff",
+                      "surface": "#faf8ff",
+                      "primary-fixed": "#ffdbd1",
+                      "secondary-fixed-dim": "#ffb77d",
+                      "on-tertiary": "#ffffff",
+                      "on-tertiary-fixed-variant": "#544600"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "gutter": "24px",
+                      "stack-lg": "24px",
+                      "stack-md": "16px",
+                      "margin-desktop": "32px",
+                      "margin-mobile": "16px",
+                      "container-max": "1440px",
+                      "sidebar-width": "280px",
+                      "stack-sm": "8px"
+              },
+              "fontFamily": {
+                      "display-lg": ["Inter"],
+                      "headline-md": ["Inter"],
+                      "headline-lg": ["Inter"],
+                      "body-lg": ["Inter"],
+                      "body-md": ["Inter"],
+                      "headline-sm": ["Inter"],
+                      "headline-lg-mobile": ["Inter"],
+                      "label-caps": ["Inter"],
+                      "metadata": ["Inter"]
+              },
+              "fontSize": {
+                      "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                      "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                      "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "metadata": ["14px", {"lineHeight": "20px", "fontWeight": "500"}]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        .custom-shadow { box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.1), 0 2px 4px -2px rgba(15, 23, 42, 0.05); }
+        .input-ring:focus-within { box-shadow: 0 0 0 2px rgba(255, 69, 0, 0.2); border-color: #FF4500; }
+        .bg-slate { background-color: #0F172A; }
+    </style>
+</head>
+<body class="bg-background text-on-background antialiased min-h-screen">
+<!-- TopNavBar -->
+<header class="bg-surface border-b border-outline-variant fixed top-0 right-0 w-[calc(100%-280px)] h-16 flex justify-between items-center px-margin-desktop z-30 hidden md:flex">
+<div class="flex items-center gap-4">
+<h1 class="font-headline-md text-headline-md text-primary">Chama</h1>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative hidden lg:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant" style="font-size: 20px;">search</span>
+<input class="pl-10 pr-4 py-2 bg-white border border-outline-variant rounded-lg font-body-md text-body-md focus:outline-none input-ring w-64" placeholder="Buscar chamados..." type="text"/>
+</div>
+<button class="text-on-surface-variant hover:bg-surface-container-low transition-all p-2 rounded-full active:opacity-80">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="A close up portrait of a professional individual in a corporate setting, looking directly at the camera with a confident expression. The lighting is soft and bright, emphasizing a clean and modern aesthetic. The color palette is natural with a focus on clear skin tones and professional attire. The overall mood is approachable yet serious, suitable for a corporate profile picture." src="https://lh3.googleusercontent.com/aida-public/AB6AXuArqC0_BZc-UPECMcG6TuGXL4T0rekfqSORbe0yKDUK7VOxVEa4BgIBk4-wcinzh28pl6LcRlCGqpYqiyXKfAl2N0COIGcpBD9oyrw6KU4gDYNIy6lowci4h04xFQRCTX-1lm9yHdFdmdpxMuUr4-d7EXWwweXuEL4FS-rF7H1QH5vqYP6QS1gu0SkwXRnEUPTO7ax4SeWdXWSfkixfI76ftO9hlvtnXPkqnR6M65rky0s8D4D9KWFAY0PP5-1Yj6MslPGslp4jI2of"/>
+</div>
+</div>
+</header>
+<!-- SideNavBar -->
+<nav class="bg-[#0F172A] fixed left-0 top-0 h-full w-[280px] border-r border-outline-variant shadow-sm flex flex-col py-gutter z-40 hidden md:flex">
+<div class="px-gutter mb-8">
+<div class="flex items-center gap-3 mb-2">
+<div class="w-8 h-8 bg-primary rounded flex items-center justify-center text-white">
+<span class="material-symbols-outlined" style="font-size: 20px;">local_fire_department</span>
+</div>
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-primary">Chama</h2>
+<p class="font-metadata text-metadata text-surface-variant/70">Task Management</p>
+</div>
+</div>
+</div>
+<div class="flex-1 flex flex-col gap-2">
+<a class="flex items-center gap-3 px-4 py-3 text-surface-variant/70 hover:text-on-primary hover:bg-white/5 transition-colors active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined" style="font-size: 20px;">dashboard</span>
+<span class="font-body-md text-body-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-white/10 border-l-4 border-primary text-on-primary font-bold active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined" data-weight="fill" style="font-size: 20px;">list_alt</span>
+<span class="font-body-md text-body-md">Backlog</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-surface-variant/70 hover:text-on-primary hover:bg-white/5 transition-colors active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined" style="font-size: 20px;">today</span>
+<span class="font-body-md text-body-md">My Day</span>
+</a>
+</div>
+<div class="mt-auto px-4 flex flex-col gap-2">
+<a class="flex items-center gap-3 px-4 py-3 text-surface-variant/70 hover:text-on-primary hover:bg-white/5 transition-colors active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined" style="font-size: 20px;">settings</span>
+<span class="font-body-md text-body-md">Settings</span>
+</a>
+<button class="w-full bg-[#FF4500] hover:bg-[#FF8C00] text-white font-body-md text-body-md py-3 rounded-lg flex items-center justify-center gap-2 transition-colors active:scale-95 duration-200 mt-4">
+<span class="material-symbols-outlined" style="font-size: 20px;">add</span>
+                New Task
+            </button>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="md:ml-[280px] pt-16 min-h-screen pb-24">
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-gutter grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Left Panel: Info -->
+<div class="lg:col-span-8 space-y-stack-lg">
+<div class="bg-surface-container-lowest custom-shadow rounded-xl p-stack-lg border border-outline-variant/30">
+<div class="flex justify-between items-start mb-6">
+<div>
+<div class="flex items-center gap-3 mb-2">
+<span class="px-3 py-1 bg-surface-container-high text-primary font-label-caps text-label-caps rounded-full uppercase">Bug Report</span>
+<span class="font-metadata text-metadata text-on-surface-variant">#CHM-4092</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface mb-4">Falha na integração com API de Pagamentos</h1>
+</div>
+<div class="flex gap-2">
+<span class="px-3 py-1 bg-error/10 text-error font-metadata text-metadata rounded-full border border-error/20">Alta</span>
+<span class="px-3 py-1 bg-secondary-container/20 text-secondary font-metadata text-metadata rounded-full border border-secondary-container/30">Aberto</span>
+</div>
+</div>
+<div class="prose max-w-none font-body-md text-body-md text-on-surface mb-8">
+<p>Os usuários estão reportando erros de timeout ao tentar finalizar compras via cartão de crédito. O problema parece estar ocorrendo apenas na plataforma web, enquanto o app mobile continua processando normalmente.</p>
+<p>Logs preliminares indicam que o webhook não está recebendo a confirmação do gateway em tempo hábil (acima de 30s).</p>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 pt-6 border-t border-outline-variant/50">
+<div>
+<p class="font-label-caps text-label-caps text-on-surface-variant uppercase mb-1">Criador</p>
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 bg-surface-variant rounded-full flex items-center justify-center text-xs font-bold text-on-surface-variant">JS</div>
+<span class="font-metadata text-metadata text-on-surface">João Silva</span>
+</div>
+</div>
+<div>
+<p class="font-label-caps text-label-caps text-on-surface-variant uppercase mb-1">Executor</p>
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 bg-surface-variant rounded-full flex items-center justify-center text-xs font-bold text-on-surface-variant border border-dashed border-outline-variant">--</div>
+<span class="font-metadata text-metadata text-on-surface-variant">Não atribuído</span>
+</div>
+</div>
+<div>
+<p class="font-label-caps text-label-caps text-on-surface-variant uppercase mb-1">Departamento</p>
+<span class="font-metadata text-metadata text-on-surface">Engenharia - Backend</span>
+</div>
+<div>
+<p class="font-label-caps text-label-caps text-on-surface-variant uppercase mb-1">Prazo</p>
+<span class="font-metadata text-metadata text-error font-medium">Hoje, 18:00</span>
+</div>
+</div>
+</div>
+<!-- Attachments / Subtasks (Optional Example) -->
+<div class="bg-surface-container-lowest custom-shadow rounded-xl p-stack-lg border border-outline-variant/30">
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-4">Anexos</h3>
+<div class="flex gap-4">
+<div class="flex items-center gap-3 p-3 border border-outline-variant rounded-lg bg-surface w-64 hover:border-primary transition-colors cursor-pointer">
+<div class="w-10 h-10 bg-error/10 text-error rounded flex items-center justify-center">
+<span class="material-symbols-outlined">picture_as_pdf</span>
+</div>
+<div>
+<p class="font-metadata text-metadata text-on-surface line-clamp-1">logs_servidor_prod.pdf</p>
+<p class="font-label-caps text-label-caps text-on-surface-variant">1.2 MB</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Panel: Timeline/Chat -->
+<div class="lg:col-span-4 flex flex-col gap-stack-md h-[calc(100vh-140px)] sticky top-24">
+<div class="bg-surface-container-lowest custom-shadow rounded-xl border border-outline-variant/30 flex-1 flex flex-col overflow-hidden">
+<div class="p-4 border-b border-outline-variant bg-surface-container-low flex justify-between items-center">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Atividade</h3>
+<span class="material-symbols-outlined text-on-surface-variant" style="font-size: 20px;">history</span>
+</div>
+<div class="flex-1 overflow-y-auto p-4 space-y-6 bg-surface">
+<!-- System Log -->
+<div class="flex gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-variant flex items-center justify-center text-on-surface-variant shrink-0 z-10 relative">
+<span class="material-symbols-outlined" style="font-size: 16px;">add_circle</span>
+</div>
+<div class="pt-1 pb-4 border-l border-outline-variant -ml-[19px] pl-8 relative">
+<p class="font-metadata text-metadata text-on-surface-variant">Chamado criado por <span class="text-on-surface font-medium">João Silva</span></p>
+<p class="font-label-caps text-label-caps text-on-surface-variant/70 mt-1">Hoje, 09:15</p>
+</div>
+</div>
+<!-- User Comment -->
+<div class="flex gap-3">
+<div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary shrink-0 z-10 relative">
+<span class="font-metadata text-metadata font-bold">MR</span>
+</div>
+<div class="pt-1 pb-4 border-l border-outline-variant -ml-[19px] pl-8 relative">
+<div class="bg-surface-container-low p-3 rounded-lg border border-outline-variant/50">
+<p class="font-metadata text-metadata text-on-surface font-medium mb-1">Maria Rossi</p>
+<p class="font-body-md text-body-md text-on-surface">Estou analisando os logs do Datadog. Parece que há um pico de latência na rota `/api/v1/checkout/process`.</p>
+</div>
+<p class="font-label-caps text-label-caps text-on-surface-variant/70 mt-2">Hoje, 10:30</p>
+</div>
+</div>
+<!-- System Status Change -->
+<div class="flex gap-3">
+<div class="w-8 h-8 rounded-full bg-secondary-container/20 border border-secondary-container flex items-center justify-center text-secondary shrink-0 z-10 relative">
+<span class="material-symbols-outlined" style="font-size: 16px;">flag</span>
+</div>
+<div class="pt-1 relative">
+<p class="font-metadata text-metadata text-on-surface-variant">Prioridade alterada de <span class="line-through">Média</span> para <span class="text-error font-medium">Alta</span></p>
+<p class="font-label-caps text-label-caps text-on-surface-variant/70 mt-1">Hoje, 10:45</p>
+</div>
+</div>
+</div>
+<div class="p-4 border-t border-outline-variant bg-surface-container-lowest">
+<div class="relative input-ring rounded-lg border border-outline-variant bg-white">
+<textarea class="w-full p-3 bg-transparent font-body-md text-body-md text-on-surface resize-none focus:outline-none" placeholder="Adicionar comentário..." rows="2"></textarea>
+<div class="flex justify-end p-2 border-t border-outline-variant/30">
+<button class="px-4 py-1.5 bg-primary hover:bg-[#FF8C00] text-white font-metadata text-metadata rounded-md transition-colors active:scale-95">Comentar</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Action Bar (Fixed) -->
+<div class="fixed bottom-0 left-0 md:left-[280px] right-0 bg-surface-container-lowest border-t border-outline-variant shadow-[0_-4px_6px_-1px_rgba(15,23,42,0.05)] p-4 flex justify-between items-center z-20">
+<div class="hidden sm:block">
+<p class="font-metadata text-metadata text-on-surface-variant">Status Atual: <span class="text-on-surface font-medium">Aberto</span></p>
+</div>
+<div class="flex gap-3 w-full sm:w-auto">
+<button class="flex-1 sm:flex-none px-6 py-2 border border-outline-variant text-on-surface font-headline-sm text-headline-sm rounded-lg hover:bg-surface-container-low transition-colors active:scale-95 bg-white">
+                Cancelar
+            </button>
+<!-- Highlighted transition button -->
+<button class="flex-1 sm:flex-none px-6 py-2 bg-[#FF4500] hover:bg-[#FF8C00] text-white font-headline-sm text-headline-sm rounded-lg transition-colors active:scale-95 flex items-center justify-center gap-2">
+<span class="material-symbols-outlined" style="font-size: 20px;">play_arrow</span>
+                Iniciar Trabalho
+            </button>
+<button class="hidden lg:flex px-6 py-2 border border-tertiary text-tertiary font-headline-sm text-headline-sm rounded-lg hover:bg-tertiary-container/20 transition-colors active:scale-95 items-center gap-2">
+<span class="material-symbols-outlined" style="font-size: 20px;">forward</span>
+                Enviar para Revisão
+            </button>
+</div>
+</div>
+</body></html>
