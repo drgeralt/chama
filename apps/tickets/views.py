@@ -2,10 +2,11 @@ from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
-from django.db import transaction
+from django.core.exceptions import ValidationError
 from .models import Ticket, TicketStatus, TicketTransitionLog, TicketPriority
 from .serializers import TicketSerializer, TicketCreateSerializer, TicketTransitionSerializer
-from organizations.models import Organization, Department, Membership
+from .services import transition_ticket
+from apps.organizations.models import Organization, Department, Membership
 
 class TicketListCreateView(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -17,7 +18,9 @@ class TicketListCreateView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        qs = Ticket.objects.filter(organization__memberships__user=user).distinct()
+        qs = Ticket.objects.select_related(
+            'creator', 'assignee', 'organization', 'department'
+        ).filter(organization__memberships__user=user).distinct()
 
         # Filters
         org_slug = self.request.query_params.get('org')
@@ -72,48 +75,16 @@ class TicketDetailView(generics.RetrieveUpdateAPIView):
 class TicketTransitionView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    @transaction.atomic
     def post(self, request, pk):
         ticket = get_object_or_404(Ticket, pk=pk, organization__memberships__user=request.user)
         serializer = TicketTransitionSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         
         action = serializer.validated_data['action']
-        old_status = ticket.status
-        new_status = old_status
-
-        if action == 'iniciar':
-            if old_status != TicketStatus.ABERTO:
-                return Response({'detail': 'Can only initiate ABERTO tickets.'}, status=400)
-            new_status = TicketStatus.ANDAMENTO
-            ticket.assignee = request.user
-        elif action == 'pausar':
-            if old_status != TicketStatus.ANDAMENTO:
-                return Response({'detail': 'Can only pause ANDAMENTO tickets.'}, status=400)
-            new_status = TicketStatus.ABERTO
-        elif action == 'enviar_revisao':
-            if old_status != TicketStatus.ANDAMENTO:
-                return Response({'detail': 'Can only submit ANDAMENTO tickets to review.'}, status=400)
-            new_status = TicketStatus.REVISAO
-        elif action == 'aprovar':
-            if old_status != TicketStatus.REVISAO:
-                return Response({'detail': 'Can only approve REVISAO tickets.'}, status=400)
-            new_status = TicketStatus.CONCLUIDO
-        elif action == 'rejeitar':
-            if old_status != TicketStatus.REVISAO:
-                return Response({'detail': 'Can only reject REVISAO tickets.'}, status=400)
-            new_status = TicketStatus.ANDAMENTO
-        elif action == 'cancelar':
-            new_status = TicketStatus.CANCELADO
-            
-        ticket.status = new_status
-        ticket.save(update_fields=['status', 'assignee', 'updated_at'])
         
-        TicketTransitionLog.objects.create(
-            ticket=ticket,
-            actor=request.user,
-            from_status=old_status,
-            to_status=new_status
-        )
+        try:
+            updated_ticket = transition_ticket(ticket, request.user, action)
+        except ValidationError as e:
+            return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
         
-        return Response(TicketSerializer(ticket).data)
+        return Response(TicketSerializer(updated_ticket).data)

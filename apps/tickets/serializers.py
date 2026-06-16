@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import Ticket, TicketTransitionLog, TicketStatus
-from organizations.models import Organization, Department
+from apps.organizations.models import Organization, Department
 
 class TicketSerializer(serializers.ModelSerializer):
     class Meta:
