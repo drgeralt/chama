@@ -1,0 +1,131 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
+
+@import "tailwindcss";
+@plugin "@tailwindcss/forms";
+@theme {
+  --color-tertiary: #705d00;
+  --color-surface-tint: #b12d00;
+  --color-surface-container-high: #e2e7ff;
+  --color-error: #ba1a1a;
+  --color-inverse-surface: #283044;
+  --color-on-primary: #ffffff;
+  --color-on-error-container: #93000a;
+  --color-surface-dim: #d2d9f4;
+  --color-surface-variant: #dae2fd;
+  --color-secondary-container: #fd8b00;
+  --color-on-primary-fixed-variant: #872000;
+  --color-inverse-on-surface: #eef0ff;
+  --color-on-secondary-fixed-variant: #6e3900;
+  --color-surface-container-low: #f2f3ff;
+  --color-on-background: #131b2e;
+  --color-outline: #926f66;
+  --color-primary: #ad2c00;
+  --color-on-tertiary-container: #4c3f00;
+  --color-inverse-primary: #ffb5a0;
+  --color-tertiary-fixed-dim: #e9c400;
+  --color-outline-variant: #e7bdb2;
+  --color-on-error: #ffffff;
+  --color-primary-container: #d83900;
+  --color-on-surface: #131b2e;
+  --color-on-surface-variant: #5d4038;
+  --color-primary-fixed-dim: #ffb5a0;
+  --color-surface-bright: #faf8ff;
+  --color-surface-container: #eaedff;
+  --color-background: #faf8ff;
+  --color-on-primary-fixed: #3b0900;
+  --color-tertiary-fixed: #ffe16d;
+  --color-error-container: #ffdad6;
+  --color-on-secondary-container: #603100;
+  --color-on-secondary-fixed: #2f1500;
+  --color-secondary: #904d00;
+  --color-on-tertiary-fixed: #221b00;
+  --color-secondary-fixed: #ffdcc3;
+  --color-surface-container-highest: #dae2fd;
+  --color-on-secondary: #ffffff;
+  --color-tertiary-container: #c9a900;
+  --color-on-primary-container: #fffbff;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface: #faf8ff;
+  --color-primary-fixed: #ffdbd1;
+  --color-secondary-fixed-dim: #ffb77d;
+  --color-on-tertiary: #ffffff;
+  --color-on-tertiary-fixed-variant: #544600;
+
+  --radius-default: 0.25rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-full: 9999px;
+
+  --spacing-gutter: 24px;
+  --spacing-stack-lg: 24px;
+  --spacing-stack-md: 16px;
+  --spacing-margin-desktop: 32px;
+  --spacing-margin-mobile: 16px;
+  --spacing-container-max: 1440px;
+  --spacing-sidebar-width: 280px;
+  --spacing-stack-sm: 8px;
+
+  --font-display-lg: 'Inter', sans-serif;
+  --font-headline-md: 'Inter', sans-serif;
+  --font-headline-lg: 'Inter', sans-serif;
+  --font-body-lg: 'Inter', sans-serif;
+  --font-body-md: 'Inter', sans-serif;
+  --font-headline-sm: 'Inter', sans-serif;
+  --font-headline-lg-mobile: 'Inter', sans-serif;
+  --font-label-caps: 'Inter', sans-serif;
+  --font-metadata: 'Inter', sans-serif;
+
+  --text-display-lg: 48px;
+  --text-display-lg--line-height: 56px;
+  --text-display-lg--letter-spacing: -0.02em;
+  --text-display-lg--font-weight: 700;
+
+  --text-headline-md: 24px;
+  --text-headline-md--line-height: 32px;
+  --text-headline-md--font-weight: 600;
+
+  --text-headline-lg: 32px;
+  --text-headline-lg--line-height: 40px;
+  --text-headline-lg--letter-spacing: -0.01em;
+  --text-headline-lg--font-weight: 700;
+
+  --text-body-lg: 18px;
+  --text-body-lg--line-height: 28px;
+  --text-body-lg--font-weight: 400;
+
+  --text-body-md: 16px;
+  --text-body-md--line-height: 24px;
+  --text-body-md--font-weight: 400;
+
+  --text-headline-sm: 20px;
+  --text-headline-sm--line-height: 28px;
+  --text-headline-sm--font-weight: 600;
+
+  --text-headline-lg-mobile: 24px;
+  --text-headline-lg-mobile--line-height: 32px;
+  --text-headline-lg-mobile--font-weight: 700;
+
+  --text-label-caps: 12px;
+  --text-label-caps--line-height: 16px;
+  --text-label-caps--letter-spacing: 0.05em;
+  --text-label-caps--font-weight: 600;
+
+  --text-metadata: 14px;
+  --text-metadata--line-height: 20px;
+  --text-metadata--font-weight: 500;
+}
+
+body {
+  @apply bg-background text-on-surface font-body-md antialiased min-h-screen;
+  margin: 0;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+.icon-fill {
+  font-variation-settings: 'FILL' 1;
+}
