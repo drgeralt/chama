@@ -46,6 +46,9 @@ COPY --from=builder /opt/venv /opt/venv
 
 # Copia o restante do código
 COPY . .
+USER root
 
+# Cria a pasta estática e concede permissão total de leitura/escrita
+RUN mkdir -p /app/staticfiles && chmod -R 777 /app
 # Comando de inicialização unificado (Roda as migrações, arquivos estáticos e sobe o servidor)
 CMD python manage.py migrate && python manage.py collectstatic --noinput && daphne -b 0.0.0.0 -p ${PORT:-8000} config.asgi:application
