@@ -150,6 +150,7 @@ else:
         "capacitor://localhost",
         "http://localhost",
         "https://api-chama-qke1.onrender.com"
+        "https://frontend-chama.onrender.com"
     ]
 
 # CSRF Trusted Origins necessários para chamadas seguras em produção
