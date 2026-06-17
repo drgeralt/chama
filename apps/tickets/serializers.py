@@ -4,8 +4,14 @@ from .models import Ticket, TicketTransitionLog, TicketComment
 
 class TicketSerializer(serializers.ModelSerializer):
     creator_name = serializers.CharField(source='creator.nome', read_only=True)
-    assignee_name = serializers.CharField(source='assignee.nome', read_only=True, allow_null=True)
-    department_name = serializers.CharField(source='department.name', read_only=True, allow_null=True)
+    assignees_data = serializers.SerializerMethodField()
+    departments_data = serializers.SerializerMethodField()
+
+    def get_assignees_data(self, obj):
+        return [{"id": str(u.id), "name": u.nome or u.email} for u in obj.assignees.all()]
+
+    def get_departments_data(self, obj):
+        return [{"id": str(d.id), "name": d.name} for d in obj.departments.all()]
 
     class Meta:
         model = Ticket
@@ -23,8 +29,8 @@ class TicketSerializer(serializers.ModelSerializer):
 class TicketCreateSerializer(serializers.Serializer):
     org_slug = serializers.SlugField(required=False)
     organization_id = serializers.UUIDField(required=False)
-    department_id = serializers.UUIDField(required=False)
-    assignee_id = serializers.UUIDField(required=False, allow_null=True)
+    department_ids = serializers.ListField(child=serializers.UUIDField(), required=False, allow_empty=True)
+    assignee_ids = serializers.ListField(child=serializers.UUIDField(), required=False, allow_empty=True)
     title = serializers.CharField(max_length=200)
     description = serializers.CharField(style={"base_template": "textarea.html"})
     priority = serializers.IntegerField(required=False)

@@ -37,7 +37,7 @@ def test_user_cannot_edit_assignee_or_department():
     client_a = UserFactory()
     MembershipFactory(user=client_a, organization=org, role=user_role)
     
-    ticket = TicketFactory(organization=org, creator=client_a)
+    ticket = TicketFactory(organization=org, creator=client_a, department=None, assignee=None)
     
     client = APIClient()
     client.force_authenticate(user=client_a)
@@ -90,12 +90,12 @@ def test_user_cannot_read_internal_comments():
     client = APIClient()
     client.force_authenticate(user=client_a)
     
-    url = reverse("ticket-comment-list-create", args=[ticket.id])
+    url = reverse("ticket-comments", args=[ticket.id])
     response = client.get(url)
     
     assert response.status_code == 200
     data = response.json()
-    results = data.get("results", data)
+    results = data["results"] if isinstance(data, dict) and "results" in data else data
     
     assert len(results) == 1
     assert results[0]["content"] == "Public hello"
@@ -117,12 +117,12 @@ def test_agent_can_read_internal_comments():
     client = APIClient()
     client.force_authenticate(user=agent)
     
-    url = reverse("ticket-comment-list-create", args=[ticket.id])
+    url = reverse("ticket-comments", args=[ticket.id])
     response = client.get(url)
     
     assert response.status_code == 200
     data = response.json()
-    results = data.get("results", data)
+    results = data["results"] if isinstance(data, dict) and "results" in data else data
     
     assert len(results) == 1
     assert results[0]["content"] == "Internal secret"

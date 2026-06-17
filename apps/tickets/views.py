@@ -27,8 +27,9 @@ class TicketListCreateView(generics.ListCreateAPIView):
         from django.db.models import Q
         qs = (
             Ticket.objects.select_related(
-                "creator", "assignee", "organization", "department"
+                "creator", "organization"
             )
+            .prefetch_related("assignees", "departments")
             .filter(
                 Q(organization__memberships__user=user, organization__memberships__role__name__in=["Admin", "Agent"]) |
                 Q(organization__memberships__user=user, organization__memberships__role__name="User", creator=user)
@@ -51,7 +52,7 @@ class TicketListCreateView(generics.ListCreateAPIView):
         if status_param:
             qs = qs.filter(status=status_param)
         if assignee:
-            qs = qs.filter(assignee_id=assignee)
+            qs = qs.filter(assignees__id=assignee)
 
         return qs
 
@@ -72,10 +73,9 @@ class TicketListCreateView(generics.ListCreateAPIView):
         else:
             return Response({"detail": "organization_id or org_slug is required."}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Handle optional department
-        dept = None
-        if data.get("department_id"):
-            dept = get_object_or_404(Department, id=data["department_id"], organization=org)
+        # Handle optional departments
+        department_ids = data.get("department_ids", [])
+        departments = Department.objects.filter(id__in=department_ids, organization=org)
 
         membership = Membership.objects.filter(user=request.user, organization=org).first()
         if not membership:
@@ -84,29 +84,38 @@ class TicketListCreateView(generics.ListCreateAPIView):
                 status=status.HTTP_403_FORBIDDEN,
             )
 
-        assignee_id = data.get("assignee_id")
-        assignee = None
+        assignee_ids = data.get("assignee_ids", [])
+        assignees = []
 
-        if assignee_id:
-            if membership.role.name not in ["Admin", "Agent"] and str(assignee_id) != str(request.user.id):
+        if assignee_ids:
+            if membership.role.name not in ["Admin", "Agent"]:
                 return Response({"detail": "Seu nível de acesso não permite atribuir tickets a terceiros."}, status=status.HTTP_403_FORBIDDEN)
             
             from django.contrib.auth import get_user_model
             User = get_user_model()
-            assignee = User.objects.filter(id=assignee_id, memberships__organization=org).first()
-            if not assignee:
-                return Response({"detail": "Usuário atribuído não pertence a organização."}, status=status.HTTP_400_BAD_REQUEST)
+            # Only Admin and Agent can be assignees
+            assignees = list(User.objects.filter(
+                id__in=assignee_ids, 
+                memberships__organization=org, 
+                memberships__role__name__in=["Admin", "Agent"]
+            ).distinct())
+            
+            if len(assignees) != len(assignee_ids):
+                return Response({"detail": "Um ou mais usuários atribuídos são inválidos ou são clientes."}, status=status.HTTP_400_BAD_REQUEST)
 
         ticket = Ticket.objects.create(
             organization=org,
-            department=dept,
             creator=request.user,
-            assignee=assignee,
             title=data["title"],
             description=data["description"],
             priority=data.get("priority", TicketPriority.MEDIA),
             due_date=data.get("due_date"),
         )
+        
+        if departments:
+            ticket.departments.set(departments)
+        if assignees:
+            ticket.assignees.set(assignees)
 
         return Response(TicketSerializer(ticket).data, status=status.HTTP_201_CREATED)
 
@@ -137,7 +146,35 @@ class TicketDetailView(generics.RetrieveUpdateAPIView):
             from rest_framework.exceptions import PermissionDenied
             raise PermissionDenied("Você não tem permissão para editar este chamado.")
             
-        serializer.save()
+        if not is_admin_agent:
+            serializer.validated_data.pop('assignees', None)
+            serializer.validated_data.pop('departments', None)
+            
+        instance = serializer.save()
+        
+        # If the user passed department_ids or assignee_ids in the JSON, they will be handled
+        # But if the request data contains lists of IDs, we should update the M2M fields
+        if is_admin_agent:
+            data = self.request.data
+            org = instance.organization
+            
+            if "departments" in data or "department_ids" in data:
+                dept_ids = data.get("departments") or data.get("department_ids", [])
+                departments = Department.objects.filter(id__in=dept_ids, organization=org)
+                instance.departments.set(departments)
+                
+            if "assignees" in data or "assignee_ids" in data:
+                assignee_ids = data.get("assignees") or data.get("assignee_ids", [])
+                from django.contrib.auth import get_user_model
+                User = get_user_model()
+                assignees = list(User.objects.filter(
+                    id__in=assignee_ids, 
+                    memberships__organization=org, 
+                    memberships__role__name__in=["Admin", "Agent"]
+                ).distinct())
+                
+                if len(assignees) == len(assignee_ids):
+                    instance.assignees.set(assignees)
 
 
 class TicketTransitionView(APIView):
@@ -152,7 +189,7 @@ class TicketTransitionView(APIView):
             return Response({"detail": "Não autorizado."}, status=status.HTTP_403_FORBIDDEN)
             
         is_admin_agent = membership.role.name in ["Admin", "Agent"]
-        is_involved = ticket.creator == request.user or ticket.assignee == request.user
+        is_involved = ticket.creator == request.user or ticket.assignees.filter(id=request.user.id).exists()
 
         if not (is_admin_agent or is_involved):
             return Response({"detail": "Você não tem permissão para alterar o status deste chamado."}, status=status.HTTP_403_FORBIDDEN)
@@ -193,6 +230,9 @@ class TicketCommentListCreateView(generics.ListCreateAPIView):
         
         membership = Membership.objects.filter(user=self.request.user, organization=ticket.organization).first()
         if membership and membership.role.name == "User":
-            serializer.save(ticket=ticket, author=self.request.user, is_internal=False)
+            comment = serializer.save(ticket=ticket, author=self.request.user, is_internal=False)
         else:
-            serializer.save(ticket=ticket, author=self.request.user)
+            comment = serializer.save(ticket=ticket, author=self.request.user)
+            
+        from .services import _notify_ticket_comment
+        _notify_ticket_comment(comment)

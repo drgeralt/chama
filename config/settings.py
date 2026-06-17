@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "apps.organizations",
     "apps.tickets",
     "apps.notifications",
+    "django_celery_beat",
 ]
 
 if DEBUG:
@@ -101,11 +102,7 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [{
-                "address": os.environ.get("REDIS_URL", "redis://redis:6379"),
-                "health_check_interval": 10,
-                "socket_keepalive": True
-            }],
+            "hosts": [os.environ.get("REDIS_URL", "redis://redis:6379")],
         },
     },
 }
@@ -222,4 +219,12 @@ STORAGES = {
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
+
+# Celery Configuration
+CELERY_BROKER_URL = os.environ.get("REDIS_URL", "redis://redis:6379/0")
+CELERY_RESULT_BACKEND = os.environ.get("REDIS_URL", "redis://redis:6379/0")
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_TIMEZONE = TIME_ZONE
  

@@ -16,7 +16,7 @@ services:
   redis:
     image: redis:7-alpine
     ports:
-      - "6379:6379"
+      - "6380:6379"
     deploy:
       resources:
         limits:
@@ -43,6 +43,46 @@ services:
       - redis
     stdin_open: true # docker run -i
     tty: true        # docker run -t
+    user: "${UID:-1000}:${GID:-1000}"
+
+  celery_worker:
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+    build:
+      context: .
+      args:
+        USER_ID: ${UID:-1000}
+        GROUP_ID: ${GID:-1000}
+    command: sh -c "celery -A config worker -l info"
+    volumes:
+      - .:/app:z
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - redis
+    user: "${UID:-1000}:${GID:-1000}"
+
+  celery_beat:
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    build:
+      context: .
+      args:
+        USER_ID: ${UID:-1000}
+        GROUP_ID: ${GID:-1000}
+    command: sh -c "celery -A config beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler"
+    volumes:
+      - .:/app:z
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - redis
     user: "${UID:-1000}:${GID:-1000}"
 
 volumes:

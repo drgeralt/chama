@@ -27,6 +27,13 @@ const Settings: React.FC = () => {
     const [isDeptModalOpen, setIsDeptModalOpen] = useState(false);
     const [isGeneratingInvite, setIsGeneratingInvite] = useState(false);
     const [selectedMember, setSelectedMember] = useState<any>(null);
+    const [selectedDepartmentId, setSelectedDepartmentId] = useState<string | null>(null);
+    const [expandedDepartments, setExpandedDepartments] = useState<Record<string, boolean>>({});
+
+    const toggleDepartment = (deptId: string, e: React.MouseEvent) => {
+        e.stopPropagation();
+        setExpandedDepartments(prev => ({ ...prev, [deptId]: !prev[deptId] }));
+    };
 
     const { data: departments = [], isLoading: isLoadingDept } = useQuery({
         queryKey: ['departments', currentOrganizationId],
@@ -81,13 +88,51 @@ const Settings: React.FC = () => {
                                 <p className="text-on-surface-variant text-sm italic">Nenhum departamento cadastrado.</p>
                             )}
                             
-                            {departments.map((dept: any) => (
-                                <div key={dept.id} className={`flex items-center gap-2 py-2 px-2 hover:bg-surface-container-low rounded-md cursor-pointer transition-colors ${dept.parent_id ? 'pl-6' : ''}`}>
-                                    <span className="material-symbols-outlined text-on-surface-variant text-sm">chevron_right</span>
-                                    <span className="material-symbols-outlined text-primary text-lg">{dept.icon || 'domain'}</span>
-                                    <span className="font-metadata text-metadata font-bold text-on-surface">{dept.name}</span>
-                                </div>
-                            ))}
+                            <div 
+                                onClick={() => setSelectedDepartmentId(null)}
+                                className={`flex items-center gap-2 py-2 px-2 hover:bg-surface-container-low rounded-md cursor-pointer transition-colors ${!selectedDepartmentId ? 'bg-primary/10' : ''}`}>
+                                <span className="material-symbols-outlined text-primary text-lg">corporate_fare</span>
+                                <span className={`font-metadata text-metadata font-bold ${!selectedDepartmentId ? 'text-primary' : 'text-on-surface'}`}>Todos</span>
+                            </div>
+
+                            {departments.map((dept: any) => {
+                                const deptMembers = members.filter((m: any) => m.department === dept.id && ['Admin', 'Agent'].includes(m.role?.name));
+                                const isExpanded = !!expandedDepartments[dept.id];
+                                
+                                return (
+                                    <div key={dept.id} className="flex flex-col">
+                                        <div 
+                                            onClick={() => setSelectedDepartmentId(dept.id)}
+                                            className={`flex items-center gap-2 py-2 px-2 hover:bg-surface-container-low rounded-md cursor-pointer transition-colors ${dept.parent_id ? 'pl-6' : ''} ${selectedDepartmentId === dept.id ? 'bg-primary/10' : ''}`}>
+                                            <span 
+                                                onClick={(e) => toggleDepartment(dept.id, e)}
+                                                className={`material-symbols-outlined text-sm cursor-pointer p-1 hover:bg-surface-variant/30 rounded ${selectedDepartmentId === dept.id ? 'text-primary' : 'text-on-surface-variant'}`}>
+                                                {isExpanded ? 'keyboard_arrow_down' : 'chevron_right'}
+                                            </span>
+                                            <span className={`material-symbols-outlined text-lg ${selectedDepartmentId === dept.id ? 'text-primary' : 'text-on-surface-variant'}`}>{dept.icon || 'domain'}</span>
+                                            <span className={`font-metadata text-metadata font-bold ${selectedDepartmentId === dept.id ? 'text-primary' : 'text-on-surface'}`}>{dept.name}</span>
+                                        </div>
+                                        
+                                        {/* Expanded Members list in tree */}
+                                        {isExpanded && (
+                                            <div className="flex flex-col gap-1 mt-1 mb-2">
+                                                {deptMembers.length === 0 ? (
+                                                    <span className={`text-xs text-on-surface-variant italic pl-${dept.parent_id ? '12' : '8'}`}>Vazio</span>
+                                                ) : (
+                                                    deptMembers.map((member: any) => (
+                                                        <div key={`tree-member-${member.id}`} className={`flex items-center gap-2 py-1.5 px-2 hover:bg-surface-container-low rounded-md cursor-pointer transition-colors pl-${dept.parent_id ? '12' : '8'}`}>
+                                                            <div className="w-5 h-5 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold text-[10px]">
+                                                                {member.user_name ? member.user_name.slice(0, 2).toUpperCase() : 'US'}
+                                                            </div>
+                                                            <span className="font-metadata text-xs text-on-surface-variant truncate">{member.user_name || 'Usuário'}</span>
+                                                        </div>
+                                                    ))
+                                                )}
+                                            </div>
+                                        )}
+                                    </div>
+                                );
+                            })}
                         </div>
                     </section>
                     
@@ -127,6 +172,7 @@ const Settings: React.FC = () => {
                                     )}
                                     {!isLoadingMembers && members
                                         .filter((member: any) => activeTab === 'equipe' ? ['Admin', 'Agent'].includes(member.role?.name) : member.role?.name === 'User')
+                                        .filter((member: any) => selectedDepartmentId ? member.department === selectedDepartmentId : true)
                                         .length === 0 && (
                                         <tr>
                                             <td colSpan={4} className="py-4 px-6 text-center text-on-surface-variant italic">
@@ -136,6 +182,7 @@ const Settings: React.FC = () => {
                                     )}
                                     {members
                                         .filter((member: any) => activeTab === 'equipe' ? ['Admin', 'Agent'].includes(member.role?.name) : member.role?.name === 'User')
+                                        .filter((member: any) => selectedDepartmentId ? member.department === selectedDepartmentId : true)
                                         .map((member: any) => (
                                         <tr key={member.id} className="border-b border-[#E2E8F0] hover:bg-surface-container-low/50 transition-colors group">
                                             <td className="py-4 px-6">

@@ -162,6 +162,8 @@ class OrganizationInviteAcceptView(generics.GenericAPIView):
             membership.role = invite.role
             membership.save()
             
+        invite.delete()
+        
         return Response({
             "detail": "Convite aceito com sucesso.",
             "organization_id": invite.organization.id,

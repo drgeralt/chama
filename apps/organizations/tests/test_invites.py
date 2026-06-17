@@ -23,7 +23,7 @@ def test_invite_acceptance_success():
     client = APIClient()
     client.force_authenticate(user=invitee)
     
-    url = reverse("invite-accept", args=[str(invite.id)])
+    url = reverse("org-invite-accept", args=[str(invite.id)])
     response = client.post(url)
     
     assert response.status_code == 200
@@ -47,9 +47,9 @@ def test_invite_acceptance_expired():
     client = APIClient()
     client.force_authenticate(user=invitee)
     
-    url = reverse("invite-accept", args=[str(invite.id)])
+    url = reverse("org-invite-accept", args=[str(invite.id)])
     response = client.post(url)
     
     assert response.status_code == 400
-    assert "expirado" in response.json().get("detail", "").lower()
+    assert "expirou" in response.json().get("detail", "").lower()
     assert not org.memberships.filter(user=invitee).exists()

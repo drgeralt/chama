@@ -21,6 +21,7 @@ class DepartmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Department
         fields = ["id", "name", "icon", "parent_id", "depth", "path"]
+        read_only_fields = ["id", "parent_id", "depth", "path"]
 
     def get_parent_id(self, obj):
         parent = obj.get_parent()

@@ -1,8 +1,8 @@
 import pytest
-from rest_framework.exceptions import ValidationError
+from django.core.exceptions import ValidationError
 from apps.tickets.services import transition_ticket
 from apps.tickets.tests.factories import TicketFactory
-from apps.organizations.tests.factories import UserFactory, MembershipFactory
+from apps.organizations.tests.factories import UserFactory, MembershipFactory, RoleFactory
 
 
 @pytest.mark.django_db
@@ -13,7 +13,7 @@ def test_transition_ticket_success():
         user=user,
         organization=ticket.organization,
         department=ticket.department,
-        role="EXECUTOR",
+        role=RoleFactory(name="Executor"),
     )
 
     updated_ticket = transition_ticket(ticket, user, "iniciar")
@@ -29,7 +29,7 @@ def test_transition_ticket_illegal_status_jump():
         user=user,
         organization=ticket.organization,
         department=ticket.department,
-        role="EXECUTOR",
+        role=RoleFactory(name="Executor"),
     )
 
     with pytest.raises(ValidationError) as exc_info:

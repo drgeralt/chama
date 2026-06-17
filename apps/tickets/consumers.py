@@ -25,6 +25,12 @@ class TicketConsumer(AsyncWebsocketConsumer):
                     self.user = user
                     group_name = f"user_{self.user.id}"
                     await self.channel_layer.group_add(group_name, self.channel_name)
+                    
+                    # Se o frontend enviar um ticket_id, inscreve o usuário no grupo daquele ticket
+                    ticket_id = text_data_json.get("ticket_id")
+                    if ticket_id:
+                        await self.channel_layer.group_add(f"ticket_{ticket_id}", self.channel_name)
+                        
                     await self.send(
                         text_data=json.dumps(
                             {"type": "authenticated", "user_id": str(self.user.id)}

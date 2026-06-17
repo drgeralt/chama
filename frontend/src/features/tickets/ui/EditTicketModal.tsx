@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { api, useUIStore } from '../../../lib/api';
+import MultiSelectDropdown from '../../../components/ui/MultiSelectDropdown';
 
 interface EditTicketModalProps {
     isOpen: boolean;
@@ -12,15 +13,15 @@ interface EditTicketModalProps {
 const EditTicketModal: React.FC<EditTicketModalProps> = ({ isOpen, onClose, ticket, organizationId }) => {
     const queryClient = useQueryClient();
     const currentRole = useUIStore(state => state.currentRole);
-    const [departmentId, setDepartmentId] = useState('');
-    const [assigneeId, setAssigneeId] = useState('');
+    const [departmentIds, setDepartmentIds] = useState<string[]>([]);
+    const [assigneeIds, setAssigneeIds] = useState<string[]>([]);
     const [priority, setPriority] = useState('2');
     const [dueDate, setDueDate] = useState('');
 
     useEffect(() => {
         if (ticket && isOpen) {
-            setDepartmentId(ticket.department || '');
-            setAssigneeId(ticket.assignee || '');
+            setDepartmentIds(ticket.departments_data ? ticket.departments_data.map((d: any) => d.id) : []);
+            setAssigneeIds(ticket.assignees_data ? ticket.assignees_data.map((a: any) => a.id) : []);
             setPriority(String(ticket.priority || 2));
             if (ticket.due_date) {
                 // Format for datetime-local: YYYY-MM-DDThh:mm
@@ -71,8 +72,8 @@ const EditTicketModal: React.FC<EditTicketModalProps> = ({ isOpen, onClose, tick
         e.preventDefault();
         const payload: any = {
             priority: parseInt(priority, 10),
-            department: departmentId || null,
-            assignee: assigneeId || null,
+            department_ids: departmentIds,
+            assignee_ids: assigneeIds,
             due_date: dueDate ? new Date(dueDate).toISOString() : null,
         };
         updateMutation.mutate(payload);
@@ -97,33 +98,21 @@ const EditTicketModal: React.FC<EditTicketModalProps> = ({ isOpen, onClose, tick
                     <div className="grid grid-cols-1 gap-4">
                         {currentRole !== 'User' && (
                             <>
-                                <div className="space-y-2">
-                                    <label className="block font-label-caps text-label-caps text-on-surface-variant uppercase">Departamento</label>
-                                    <select 
-                                        value={departmentId}
-                                        onChange={(e) => setDepartmentId(e.target.value)}
-                                        className="w-full h-12 px-4 bg-white border border-outline-variant rounded-lg focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
-                                    >
-                                        <option value="">Sem Departamento</option>
-                                        {departments.map((dept: any) => (
-                                            <option key={dept.id} value={dept.id}>{dept.name}</option>
-                                        ))}
-                                    </select>
-                                </div>
+                                <MultiSelectDropdown 
+                                    label="Departamentos"
+                                    placeholder="Buscar departamentos..."
+                                    options={departments.map((d: any) => ({ id: d.id, label: d.name }))}
+                                    selectedIds={departmentIds}
+                                    onChange={setDepartmentIds}
+                                />
 
-                                <div className="space-y-2">
-                                    <label className="block font-label-caps text-label-caps text-on-surface-variant uppercase">Atribuir a</label>
-                                    <select 
-                                        value={assigneeId}
-                                        onChange={(e) => setAssigneeId(e.target.value)}
-                                        className="w-full h-12 px-4 bg-white border border-outline-variant rounded-lg focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
-                                    >
-                                        <option value="">Não atribuído</option>
-                                        {members.map((m: any) => (
-                                            <option key={m.user_id} value={m.user_id}>{m.user_name || m.user_email}</option>
-                                        ))}
-                                    </select>
-                                </div>
+                                <MultiSelectDropdown 
+                                    label="Atribuir a"
+                                    placeholder="Buscar equipe..."
+                                    options={members.filter((m: any) => ['Admin', 'Agent'].includes(m.role?.name)).map((m: any) => ({ id: m.user_id, label: m.user_name || m.user_email }))}
+                                    selectedIds={assigneeIds}
+                                    onChange={setAssigneeIds}
+                                />
                             </>
                         )}
 

@@ -53,13 +53,42 @@ const TicketDetail: React.FC = () => {
 
     const transitionMutation = useMutation({
         mutationFn: async (action: string) => {
-            const { data } = await api.post(`/tickets/${id}/transition/`, { action });
+            const { data } = await api.post(`/tickets/${id}/transitions/`, { action });
             return data;
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['ticket', id] });
         }
     });
+
+    React.useEffect(() => {
+        if (id === 'new') return;
+        const token = localStorage.getItem('access_token');
+        if (!token) return;
+
+        // Use appropriate ws:// or wss:// based on current protocol
+        const apiUrl = import.meta.env.VITE_API_URL || window.location.origin;
+        const wsProtocol = apiUrl.startsWith('https') ? 'wss:' : 'ws:';
+        const wsHost = import.meta.env.VITE_API_URL ? new URL(import.meta.env.VITE_API_URL).host : window.location.host;
+        const client = new WebSocket(`${wsProtocol}//${wsHost}/ws/tickets/`);
+
+        client.onopen = () => {
+            client.send(JSON.stringify({ type: 'authenticate', token, ticket_id: id }));
+        };
+
+        client.onmessage = (message: MessageEvent) => {
+            const data = JSON.parse(message.data as string);
+            if (data.type === 'new_comment' && data.ticket_id === id) {
+                queryClient.invalidateQueries({ queryKey: ['ticketComments', id] });
+            } else if (data.type === 'ticket_updated' && data.ticket_id === id) {
+                queryClient.invalidateQueries({ queryKey: ['ticket', id] });
+            }
+        };
+
+        return () => {
+            client.close();
+        };
+    }, [id, queryClient]);
 
     if (id === 'new') return null;
     if (isLoading) return <MainLayout><p className="p-4">Carregando detalhes...</p></MainLayout>;
@@ -113,19 +142,36 @@ const TicketDetail: React.FC = () => {
                                 </div>
                             </div>
                             <div>
-                                <p className="font-label-caps text-label-caps text-on-surface-variant uppercase mb-1">Executor</p>
-                                <div className="flex items-center gap-2">
-                                    <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${ticket.assignee ? 'bg-primary/10 text-primary border border-primary/20' : 'bg-surface-variant text-on-surface-variant border border-dashed border-outline-variant'}`}>
-                                        {ticket.assignee_name ? ticket.assignee_name.slice(0,2).toUpperCase() : '--'}
-                                    </div>
-                                    <span className={`font-metadata text-metadata ${ticket.assignee ? 'text-on-surface' : 'text-on-surface-variant'}`}>
-                                        {ticket.assignee_name || 'Não atribuído'}
-                                    </span>
+                                <p className="font-label-caps text-label-caps text-on-surface-variant uppercase mb-1">Executor(es)</p>
+                                <div className="flex flex-wrap gap-2">
+                                    {ticket.assignees_data && ticket.assignees_data.length > 0 ? (
+                                        ticket.assignees_data.map((a: any) => (
+                                            <div key={a.id} className="flex items-center gap-2">
+                                                <div className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold bg-primary/10 text-primary border border-primary/20">
+                                                    {a.name ? a.name.slice(0,2).toUpperCase() : '--'}
+                                                </div>
+                                                <span className="font-metadata text-metadata text-on-surface">{a.name}</span>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <div className="flex items-center gap-2">
+                                            <div className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold bg-surface-variant text-on-surface-variant border border-dashed border-outline-variant">--</div>
+                                            <span className="font-metadata text-metadata text-on-surface-variant">Não atribuído</span>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                             <div>
-                                <p className="font-label-caps text-label-caps text-on-surface-variant uppercase mb-1">Departamento</p>
-                                <span className="font-metadata text-metadata text-on-surface">{ticket.department_name || 'N/A'}</span>
+                                <p className="font-label-caps text-label-caps text-on-surface-variant uppercase mb-1">Departamentos</p>
+                                <div className="flex flex-wrap gap-1">
+                                    {ticket.departments_data && ticket.departments_data.length > 0 ? (
+                                        ticket.departments_data.map((d: any) => (
+                                            <span key={d.id} className="font-metadata text-metadata text-on-surface px-2 py-0.5 bg-surface-container-high rounded-md">{d.name}</span>
+                                        ))
+                                    ) : (
+                                        <span className="font-metadata text-metadata text-on-surface-variant">N/A</span>
+                                    )}
+                                </div>
                             </div>
                             <div>
                                 <p className="font-label-caps text-label-caps text-on-surface-variant uppercase mb-1">Prazo</p>
@@ -148,19 +194,22 @@ const TicketDetail: React.FC = () => {
                                 <div className="w-8 h-8 rounded-full bg-surface-variant flex items-center justify-center text-on-surface-variant shrink-0 z-10 relative">
                                     <span className="material-symbols-outlined" style={{fontSize: '16px'}}>add_circle</span>
                                 </div>
-                                <div className="pt-1 pb-4 border-l border-outline-variant -ml-[19px] pl-8 relative">
+                                <div className="pt-1 pb-4 border-l-2 border-outline-variant -ml-[19px] pl-7 relative">
                                     <p className="font-metadata text-metadata text-on-surface-variant">Chamado criado por <span className="text-on-surface font-medium">{ticket.creator_name || ticket.creator}</span></p>
                                     <p className="font-label-caps text-label-caps text-on-surface-variant/70 mt-1">{new Date(ticket.created_at).toLocaleString()}</p>
                                 </div>
                             </div>
                             {comments.map((c: any) => (
                                 <div key={c.id} className="flex gap-3">
-                                    <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0 z-10 relative border border-primary/20">
-                                        <span className="material-symbols-outlined" style={{fontSize: '16px'}}>chat_bubble</span>
+                                    <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 z-10 relative border ${c.is_internal ? 'bg-[#FFF3E0] text-[#FF8C00] border-[#FF8C00]/30' : 'bg-primary/10 text-primary border-primary/20'}`}>
+                                        <span className="material-symbols-outlined" style={{fontSize: '16px'}}>{c.is_internal ? 'lock' : 'chat_bubble'}</span>
                                     </div>
-                                    <div className="pt-1 pb-4 border-l border-outline-variant -ml-[19px] pl-8 relative">
-                                        <p className="font-metadata text-metadata text-on-surface font-medium mb-1">{c.author_name || 'Usuário'}</p>
-                                        <div className="bg-white border border-outline-variant/50 rounded-lg p-3 text-body-sm font-body-sm shadow-sm whitespace-pre-wrap">
+                                    <div className="pt-1 pb-4 border-l-2 border-outline-variant -ml-[19px] pl-7 relative">
+                                        <div className="flex items-center gap-2 mb-1">
+                                            <p className="font-metadata text-metadata text-on-surface font-medium">{c.author_name || 'Usuário'}</p>
+                                            {c.is_internal && <span className="px-2 py-0.5 bg-[#FFF3E0] text-[#FF8C00] font-label-caps text-[10px] rounded uppercase font-bold border border-[#FF8C00]/30">Interno</span>}
+                                        </div>
+                                        <div className={`bg-white border rounded-lg p-3 text-body-sm font-body-sm shadow-sm whitespace-pre-wrap ${c.is_internal ? 'border-[#FF8C00]/30 bg-[#FFF3E0]/30' : 'border-outline-variant/50'}`}>
                                             {c.content}
                                         </div>
                                         <p className="font-label-caps text-label-caps text-on-surface-variant/70 mt-2">{new Date(c.created_at).toLocaleString()}</p>
@@ -214,7 +263,7 @@ const TicketDetail: React.FC = () => {
                     <button onClick={() => history.goBack()} className="flex-1 sm:flex-none px-6 py-2 border border-outline-variant text-on-surface font-headline-sm text-headline-sm rounded-lg hover:bg-surface-container-low transition-colors active:scale-95 bg-white">
                         Voltar
                     </button>
-                    {ticket.status === 'ABERTO' && (
+                    {ticket.status === 'ABERTO' && currentRole !== 'User' && (
                         <button 
                             onClick={() => transitionMutation.mutate('iniciar')}
                             disabled={transitionMutation.isPending}
@@ -223,6 +272,38 @@ const TicketDetail: React.FC = () => {
                             <span className="material-symbols-outlined" style={{fontSize: '20px'}}>play_arrow</span>
                             {transitionMutation.isPending ? 'Iniciando...' : 'Iniciar Trabalho'}
                         </button>
+                    )}
+
+                    {ticket.status === 'ANDAMENTO' && currentRole !== 'User' && (
+                        <button 
+                            onClick={() => transitionMutation.mutate('enviar_revisao')}
+                            disabled={transitionMutation.isPending}
+                            className="flex-1 sm:flex-none px-6 py-2 bg-[#FFD700] hover:bg-[#FDB931] text-black font-headline-sm text-headline-sm rounded-lg transition-colors active:scale-95 flex items-center justify-center gap-2 disabled:opacity-50"
+                        >
+                            <span className="material-symbols-outlined" style={{fontSize: '20px'}}>rate_review</span>
+                            {transitionMutation.isPending ? 'Enviando...' : 'Enviar para Revisão'}
+                        </button>
+                    )}
+
+                    {ticket.status === 'REVISAO' && currentRole === 'User' && (
+                        <>
+                            <button 
+                                onClick={() => transitionMutation.mutate('rejeitar')}
+                                disabled={transitionMutation.isPending}
+                                className="flex-1 sm:flex-none px-6 py-2 border border-error text-error font-headline-sm text-headline-sm rounded-lg transition-colors hover:bg-error/10 active:scale-95 flex items-center justify-center gap-2 disabled:opacity-50"
+                            >
+                                <span className="material-symbols-outlined" style={{fontSize: '20px'}}>cancel</span>
+                                {transitionMutation.isPending ? 'Aguarde...' : 'Rejeitar'}
+                            </button>
+                            <button 
+                                onClick={() => transitionMutation.mutate('aprovar')}
+                                disabled={transitionMutation.isPending}
+                                className="flex-1 sm:flex-none px-6 py-2 bg-[#32CD32] hover:bg-[#228B22] text-white font-headline-sm text-headline-sm rounded-lg transition-colors active:scale-95 flex items-center justify-center gap-2 disabled:opacity-50"
+                            >
+                                <span className="material-symbols-outlined" style={{fontSize: '20px'}}>check_circle</span>
+                                {transitionMutation.isPending ? 'Concluindo...' : 'Aprovar e Concluir'}
+                            </button>
+                        </>
                     )}
                 </div>
             </div>

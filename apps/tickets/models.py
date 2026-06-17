@@ -29,20 +29,16 @@ class Ticket(models.Model):
     organization = models.ForeignKey(
         Organization, on_delete=models.CASCADE, related_name="tickets"
     )
-    department = models.ForeignKey(
-        Department, on_delete=models.SET_NULL, related_name="tickets", null=True, blank=True
+    departments = models.ManyToManyField(
+        Department, related_name="tickets", blank=True
     )
     creator = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.RESTRICT,
         related_name="created_tickets",
     )
-    assignee = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name="assigned_tickets",
+    assignees = models.ManyToManyField(
+        settings.AUTH_USER_MODEL, related_name="assigned_tickets", blank=True
     )
 
     title = models.CharField(max_length=200)

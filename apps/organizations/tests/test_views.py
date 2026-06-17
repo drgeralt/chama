@@ -14,14 +14,14 @@ def test_organization_list_create():
     client = APIClient()
     client.force_authenticate(user=user)
 
-    url = reverse("organization-list")
+    url = reverse("org-list-create")
     
     # Test List
     response = client.get(url)
     assert response.status_code == 200
     data = response.json()
     
-    results = data.get("results", data)
+    results = data["results"] if isinstance(data, dict) and "results" in data else data
     assert len(results) == 1
     assert results[0]["name"] == "Test Org"
     assert results[0]["current_role"] == "Admin"
@@ -32,7 +32,7 @@ def test_organization_creation():
     client = APIClient()
     client.force_authenticate(user=user)
 
-    url = reverse("organization-list")
+    url = reverse("org-list-create")
     response = client.post(url, {
         "name": "New Org",
         "slug": "new-org"
