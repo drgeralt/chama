@@ -47,5 +47,5 @@ COPY --from=builder /opt/venv /opt/venv
 # Copia o restante do código
 COPY . .
 
-# Comando de inicialização (No Render, sobrescrevemos isso pelo dashboard)
-CMD ["daphne", "-b", "0.0.0.0", "-p", "8000", "config.asgi:application"]
+# Comando de inicialização unificado (Roda as migrações, arquivos estáticos e sobe o servidor)
+CMD ["sh", "-c", "python manage.py migrate && python manage.py collectstatic --noinput && daphne -b 0.0.0.0 -p 8000 config.asgi:application"]

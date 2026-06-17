@@ -48,7 +48,6 @@ INSTALLED_APPS = [
     "apps.organizations",
     "apps.tickets",
     "apps.notifications",
-    "django_celery_beat",
 ]
 
 if DEBUG:
