@@ -1,0 +1,63 @@
+name: CI/CD Pipeline Chama
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test_and_deploy:
+    runs-on: ubuntu-latest
+    
+    # Criação de um container PostgreSQL efémero para os testes
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_USER: chama_test
+          POSTGRES_PASSWORD: chama_password
+          POSTGRES_DB: chama_test_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout do Código
+        uses: actions/checkout@v4
+
+      - name: Setup Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Instalar Dependências
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
+
+      - name: Linter (Black e Flake8)
+        run: |
+          black --check .
+          flake8 .
+
+      - name: Testes Unitários e FSM (Pytest)
+        env:
+          DATABASE_URL: postgres://chama_test:chama_password@localhost:5432/chama_test_db
+          DJANGO_SETTINGS_MODULE: config.settings
+          SECRET_KEY: test_secret_key_bypass
+        run: |
+          pytest --cov=apps/
+
+      - name: Deploy no Render
+        # Executa o curl apenas se as etapas anteriores não falharem
+        if: success()
+        env:
+          RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
+        run: |
+          curl -X POST "$RENDER_DEPLOY_HOOK"
